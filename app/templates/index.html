@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hmint</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  </head>
+  <body>
+    <div id="nav-a">
+      <div>
+        <a href="#">About</a>
+        <a href="#">Settings</a>
+        <a href="#">Log Out</a>
+      </div>
+    </div>
+
+    <div id="nav-b">
+      <div>
+        <div id="logo">hmint</div>
+        <ul class="nav nav-tabs">
+          <li role="presentation" class="active"><a href="#">overview</a></li>
+          <li role="presentation"><a href="#">transactions</a></li>
+          <li role="presentation"><a href="#">bills</a></li>
+          <li role="presentation"><a href="#">budgets</a></li>
+          <li role="presentation"><a href="#">goals</a></li>
+          <li role="presentation"><a href="#">graphs</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="content">
+      <div id="summary">
+        <div id="accounts">
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+  </body>
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</html>
