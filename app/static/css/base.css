@@ -2,6 +2,20 @@
   box-sizing: border-box;
 }
 
+/*De-border-radius everything*/
+a.btn,
+.panel,
+.alert,
+input.form-control {
+    border-radius: 0;
+}
+
+/*Make alerts smaller*/
+.alert {
+    padding: 10px;
+    padding-right: 30px;
+}
+
 #nav-a {
     height: 35px;
     line-height: 35px;

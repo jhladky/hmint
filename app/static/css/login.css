@@ -1,0 +1,15 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.panel.panel-default {
+    width: 400px;
+}
+
+#register {
+    position: absolute;
+    top: 15px;
+    right : 15px;
+}

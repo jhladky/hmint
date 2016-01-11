@@ -8,14 +8,14 @@ clean:
 upgrade:
 	psql -d hmint -c 'drop schema public cascade; create schema public;'
 	foreman run python2 manage.py db upgrade
-# psql -d hmint -a -f setup.sql
 
 # Generate a migration for the current schema
 migrate:
+	psql -d hmint -c 'drop schema public cascade; create schema public;'
 	foreman run python2 manage.py db migrate
 
-db_dump:
-	pg_dump --data-only hmint > local.db
+# db_dump:
+# 	pg_dump --data-only hmint > local.db
 
-db_restore: local.db
-	psql hmint < local.db
+# db_restore: local.db
+# 	psql hmint < local.db

@@ -3,7 +3,7 @@ import importlib
 from flask import Flask, g, render_template
 from flask.ext.login import current_user
 from core import db, migrate, login_manager,\
-    DEBUG, TESTING, SQLALCHEMY_DATABASE_URI
+    DEBUG, TESTING, SQLALCHEMY_DATABASE_URI, SECRET_KEY
 from models.user import User
 import routes
 
@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 app.config.update(
     SQLALCHEMY_DATABASE_URI=SQLALCHEMY_DATABASE_URI,
+    SECRET_KEY=SECRET_KEY,
     DEBUG=DEBUG,
     TESTING=TESTING
 )
@@ -29,7 +30,8 @@ register_blueprints(app, 'app.routes', routes.__path__)
 
 @app.route('/')
 def slash():
-    return render_template('index.html')
+    return render_template('index.html' if current_user.is_authenticated
+                           else 'login.html')
 
 
 @app.before_request
