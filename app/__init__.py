@@ -1,8 +1,11 @@
+import pkgutil
+import importlib
 from flask import Flask, g, render_template
 from flask.ext.login import current_user
-from core import db, login_manager,\
+from core import db, migrate, login_manager,\
     DEBUG, TESTING, SQLALCHEMY_DATABASE_URI
 from models.user import User
+import routes
 
 app = Flask(__name__)
 
@@ -12,8 +15,16 @@ app.config.update(
     TESTING=TESTING
 )
 
+
+def register_blueprints(app, package_name, package_path):
+    for _, name, _ in pkgutil.iter_modules(package_path):
+        m = importlib.import_module('.' + name, package_name)
+        app.register_blueprint(getattr(m, 'blueprint'))
+
 db.init_app(app)
+migrate.init_app(app, db)
 login_manager.init_app(app)
+register_blueprints(app, 'app.routes', routes.__path__)
 
 
 @app.route('/')
