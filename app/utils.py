@@ -1,12 +1,11 @@
 import datetime
 import operator
-from flask.ext.login import current_user
 from core import db
 from sqlalchemy import desc
 from sqlalchemy.exc import InvalidRequestError, IntegrityError
 
 
-def get_items(model, request):
+def get_items(model, request, user=None):
     ops = {
         '<': operator.lt,
         '<=': operator.le,
@@ -22,7 +21,7 @@ def get_items(model, request):
         request.args.get('filter') else []
     desc_order = False
 
-    response = {'errors': []}
+    errors = []
     order_param = None
     limit_param = None
     filters_param = []
@@ -32,13 +31,13 @@ def get_items(model, request):
         sort = sort[1:]
 
     if sort and sort not in model.sortable():
-        response['errors'].append('Invalid sort parameter.')
+        errors.append('Invalid sort parameter.')
     elif sort:
         order_param = desc(getattr(model, sort)) if desc_order\
             else getattr(model, sort)
 
     if limit and not is_int(limit):
-        response['errors'].append('Invalid limit parameter.')
+        errors.append('Invalid limit parameter.')
     elif limit:
         limit_param = int(limit)
 
@@ -46,17 +45,17 @@ def get_items(model, request):
         try:
             opr = ops[OPS_REGEX.search(s).group(0)]
         except AttributeError:
-            response['errors'].append('Invalid filter parameter.')
+            errors.append('Invalid filter parameter.')
             break
 
         toks = OPS_REGEX.split(s)
         if len(toks) != 2 or toks[0] not in model.sortable():
-            response['errors'].append('Invalid filter parameter.')
+            errors.append('Invalid filter parameter.')
             break
 
         attr = getattr(model, toks[0])
         if toks[0] == 'date' and not is_number(toks[1]):
-            response['errors'].append('Invalid filter parameter.')
+            errors.append('Invalid filter parameter.')
             break
         elif toks[0] == 'date':
             value = datetime.datetime.fromtimestamp(float(toks[1]))
@@ -65,18 +64,23 @@ def get_items(model, request):
 
         filters_param.append(opr(attr, value))
 
-    if not response['errors']:
+    if not errors:
         try:
-            response['payload'] = [i.serialize for i in
-                                   db.session.query(model)
-                                   .filter(*filters_param)
-                                   .filter_by(user=current_user)
-                                   .order_by(order_param).limit(limit_param)]
+            payload = db.session.query(model)\
+                .filter(*filters_param)\
+                .order_by(order_param)\
+                .limit(limit_param)
         except InvalidRequestError:
-            response['errors'].append('Invalid filter parameter.')
+            errors.append('Invalid filter parameter.')
 
-    response['success'] = not response['errors']
-    return response
+    if user and not errors:
+        payload = payload.filter_by(user=user)
+
+    return {
+        'success': not errors,
+        'errors': errors,
+        'payload': [i.serialize for i in payload]
+    }
 
 
 def get_item(item_id, model, user=None):
@@ -85,7 +89,7 @@ def get_item(item_id, model, user=None):
 
     if not item:
         response['errors'].append('Does not exist.')
-    elif user and item.user != current_user:
+    elif user and item.user != user:
         response['errors'].append('Forbidden.')
     else:
         response['payload'] = item.serialize
@@ -103,3 +107,11 @@ def get_or_create(json, model, **kwargs):
         db.session.add(instance)
         db.session.commit()
         return instance
+
+
+# Convert a datetime object to unix epoch
+# If no argument is specified gives the current epoch time
+def unix_time(dt=datetime.datetime.now()):
+    epoch = datetime.datetime.utcfromtimestamp(0)
+    delta = dt - epoch
+    return delta.total_seconds()

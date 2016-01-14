@@ -1,0 +1,10 @@
+#overview {
+    height: 100%;
+    padding-top: 15px;
+}
+
+#accounts {
+    height: 100%;
+    border-right: solid 1px #ddd;
+    width:300px;
+}

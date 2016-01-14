@@ -67,6 +67,12 @@ input.form-control {
 #settings .modal-header ul {
     font-variant: small-caps;
     font-size: 13pt;
+    border: none;
+}
+
+#nav-b ul > li.active > a,
+#settings .modal-header ul > li.active > a {
+    border-bottom-color: #ddd;
 }
 
 #nav-b > div {
@@ -109,15 +115,4 @@ html, body {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
-}
-
-#summary {
-    height: 100%;
-    padding-top: 15px;
-}
-
-#accounts {
-    height: 100%;
-    border-right: solid 1px grey;
-    width:300px;
 }

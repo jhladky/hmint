@@ -1,11 +1,12 @@
 import pkgutil
 import importlib
-from flask import Flask, g, render_template, redirect, url_for
+from flask import Flask, g, render_template, redirect, url_for, jsonify
 from flask.ext.login import current_user
 from core import db, migrate, login_manager,\
     DEBUG, TESTING, SQLALCHEMY_DATABASE_URI, SECRET_KEY
 from models.user import User
 from decorators import requires_login
+from exceptions import ItemNotFound
 import routes
 
 app = Flask(__name__)
@@ -70,6 +71,13 @@ def goals():
 @requires_login
 def graphs():
     return render_template('graphs.html')
+
+
+@app.errorhandler(ItemNotFound)
+def handle_item_not_found(error):
+    response = jsonify(error.serialize)
+    response.status_code = error.status_code
+    return response
 
 
 @app.before_request
