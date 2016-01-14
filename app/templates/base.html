@@ -14,32 +14,61 @@
   <body>
     <div id="nav-a">
       <div>
-        <a href="#">About</a>
-        <a href="#">Settings</a>
-        <a href="#">Log Out</a>
+        <a href="javascript: void 0;">About</a>
+        <a href="javascript: void 0;">Settings</a>
+        <a href="javascript: void 0;">Log Out</a>
       </div>
     </div>
 
     <div id="nav-b">
       <div>
         <div id="logo">hmint</div>
+        {% set nav_bar = [
+           ('/', 'overview'),
+           ('/transactions/', 'transactions'),
+           ('/bills/', 'bills'),
+           ('/budgets/', 'budgets'),
+           ('/goals/', 'goals'),
+           ('/graphs/', 'graphs'),
+        ] -%}
         <ul class="nav nav-tabs">
-          <li role="presentation" class="active"><a href="#">overview</a></li>
-          <li role="presentation"><a href="#">transactions</a></li>
-          <li role="presentation"><a href="#">bills</a></li>
-          <li role="presentation"><a href="#">budgets</a></li>
-          <li role="presentation"><a href="#">goals</a></li>
-          <li role="presentation"><a href="#">graphs</a></li>
+          {% for href, title in nav_bar %}
+          <li{% if title == active_page %} class="active"{% endif %}>
+            <a href="{{ href|e }}">{{ title|e }}</a>
+          </li>
+          {% endfor %}
         </ul>
       </div>
     </div>
 
     <div id="content">{% block content %}{% endblock %}</div>
+
+    <div class="modal fade" id="settings">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <ul class="nav nav-tabs">
+              <li data-toggle="tab" class="active"><a href="#">accounts</a></li>
+              <li data-toggle="tab"><a href="#">settings</a></li>
+            </ul>
+          </div>
+          <div class="modal-body">
+            <a href="javascript: void 0;" class="btn btn-success btn-block">+ New Account</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </body>
 
-  {% block script %}
   <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-  {% endblock %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+  <script type="text/javascript">$(function () { app.setup(); });</script>
+  {% block script %}{% endblock %}
 
 </html>

@@ -1,10 +1,11 @@
 import pkgutil
 import importlib
-from flask import Flask, g, render_template
+from flask import Flask, g, render_template, redirect, url_for
 from flask.ext.login import current_user
 from core import db, migrate, login_manager,\
     DEBUG, TESTING, SQLALCHEMY_DATABASE_URI, SECRET_KEY
 from models.user import User
+from decorators import requires_login
 import routes
 
 app = Flask(__name__)
@@ -28,10 +29,47 @@ login_manager.init_app(app)
 register_blueprints(app, 'app.routes', routes.__path__)
 
 
+@app.route('/login/')
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('overview'))
+    return render_template('login.html')
+
+
 @app.route('/')
-def slash():
-    return render_template('index.html' if current_user.is_authenticated
-                           else 'login.html')
+@requires_login
+def overview():
+    return render_template('overview.html')
+
+
+@app.route('/transactions/')
+@requires_login
+def transactions():
+    return render_template('transactions.html')
+
+
+@app.route('/bills/')
+@requires_login
+def bills():
+    return render_template('bills.html')
+
+
+@app.route('/budgets/')
+@requires_login
+def budgets():
+    return render_template('budgets.html')
+
+
+@app.route('/goals/')
+@requires_login
+def goals():
+    return render_template('goals.html')
+
+
+@app.route('/graphs/')
+@requires_login
+def graphs():
+    return render_template('graphs.html')
 
 
 @app.before_request

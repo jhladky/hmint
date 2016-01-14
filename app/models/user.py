@@ -25,3 +25,11 @@ class User(db.Model, UserMixin):
 
     def is_authenticated(self):
         return True
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'password': self.password
+        }

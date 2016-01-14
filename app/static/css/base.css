@@ -4,6 +4,7 @@
 
 /*De-border-radius everything*/
 a.btn,
+.nav-tabs > li > a,
 .panel,
 .alert,
 input.form-control {
@@ -62,7 +63,8 @@ input.form-control {
     top: 35px;
 }
 
-#nav-b ul {
+#nav-b ul,
+#settings .modal-header ul {
     font-variant: small-caps;
     font-size: 13pt;
 }

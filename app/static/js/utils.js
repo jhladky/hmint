@@ -1,5 +1,18 @@
 "use strict";
 
+app.utils.getQueryParam = function (variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split("&"), i, pair;
+
+    for (i = 0; i < vars.length; i++) {
+        pair = vars[i].split("=");
+        if (pair[0] === variable){
+            return pair[1];
+        }
+    }
+    return undefined;
+}
+
 app.utils.orAlert = function (success, thisArg) {
     var self = this, $ctr = thisArg && thisArg.$messages || app.$messages;
 

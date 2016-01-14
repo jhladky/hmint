@@ -16,7 +16,7 @@ var app = {
 };
 
 app.setup = function () {
-    var self = this;
+    var self = this, message;
 
     this.url = window.location.protocol + "//" + window.location.host + "/api";
     this.$messages = $("#messages");
@@ -25,4 +25,9 @@ app.setup = function () {
         alert("There was an error processing your request. " +
               "Please reload the page and try again. ");
     });
+
+    message = app.utils.getQueryParam("message");
+    if (message) {
+        app.utils.info(decodeURIComponent(message).replace("+", " "));
+    }
 };

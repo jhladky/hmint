@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from werkzeug import check_password_hash
 from flask.ext.login import login_user, logout_user
 from app.core import db
-from app.decorators import requires_login, requires_keys
+from app.api_decorators import requires_login, requires_keys
 from app.models.user import User
 
 blueprint = Blueprint('misc', __name__, url_prefix='/api')
