@@ -1,6 +1,7 @@
 import datetime
 import operator
 from core import db
+from exceptions import NotFoundError
 from sqlalchemy import desc
 from sqlalchemy.exc import InvalidRequestError, IntegrityError
 
@@ -84,17 +85,15 @@ def get_items(model, request, user=None):
 
 
 def get_item(item_id, model, user=None):
-    response = {'errors': []}
     item = db.session.query(model).get(item_id)
 
-    if not item:
-        response['errors'].append('Does not exist.')
-    elif user and item.user != user:
-        response['errors'].append('Forbidden.')
+    if item is None:
+        raise NotFoundError(model)
+
+    if user and item.user != user:
+        return {'success': False, 'errors': ['Forbidden.']}
     else:
-        response['payload'] = item.serialize
-    response['success'] = not response['errors']
-    return response
+        return {'success': True, 'payload': item.serialize}
 
 
 def get_or_create(json, model, **kwargs):

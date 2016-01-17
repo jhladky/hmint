@@ -5,7 +5,7 @@ from app.core import db
 from app.api_decorators import requires_login, requires_keys
 from app.models.user import User
 
-blueprint = Blueprint('misc', __name__, url_prefix='/api')
+blueprint = Blueprint('api_slash', __name__, url_prefix='/api')
 
 
 @blueprint.route('/login/', methods=['POST'])

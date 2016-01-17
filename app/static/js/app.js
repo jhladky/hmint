@@ -26,8 +26,27 @@ app.setup = function () {
               "Please reload the page and try again. ");
     });
 
+    this.setupSettings();
+
     message = app.utils.getQueryParam("message");
     if (message) {
         app.utils.info(decodeURIComponent(message).replace("+", " "));
     }
+};
+
+//Find a better way to do this later.
+app.setupSettings = function () {
+    var self = this;
+
+    //We should be using knockout even for this stuff!!
+    this.$settings = $("#settings");
+    this.$settingsLnk = $("#nav-a a:nth-child(2)");
+
+    this.$settingsLnk.click(function () {
+        self.$settings.modal({
+            "backdrop": "static",
+            "show": true
+        });
+    });
+
 };

@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 from flask.ext.login import current_user
 from app.core import db
-from app.utils import get_items
-from app.api_decorators import requires_login, requires_keys
+from app.utils import get_item, get_items
+from app.api_decorators import requires_login, requires_keys, requires_debug
 from app.models.account import Account
 from app.models.account_category import AccountCategory
 from app.models.institution import Institution
@@ -30,7 +30,7 @@ def new():
     account = Account(request.get_json(force=True))
     db.session.add(account)
     db.session.commit()
-    return jsonify(errors=[], success=True, account_id=account.id)
+    return jsonify(success=True, account_id=account.id)
 
 
 @blueprint.route('/<int:id>/', methods=['PUT'])
@@ -38,3 +38,21 @@ def new():
 @requires_keys('category', 'institution', 'name')
 def edit(id):
     pass
+
+
+@blueprint.route('/fake/', methods=['POST'])
+@requires_debug
+def fake():
+    json = {
+        'name': '',
+        'category': '',
+        'institution': ''
+    }
+
+    # We're going to have to create so much to just get this to work
+    # 1. Account Categories (Can just initially by the first
+    # 5 or 10 that come to mind)
+    # 2. Random institutions
+    # 3. Then rewrite account based on the ACCOUNT_CATEGORY!
+
+    return jsonify(success=True, account_id=account.id)

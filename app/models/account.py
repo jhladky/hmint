@@ -2,7 +2,7 @@ from app.core import db
 from app.models.user import User
 from app.models.institution import Institution
 from app.models.account_category import AccountCategory
-from app.exceptions import ItemNotFound
+from app.exceptions import NotFoundError
 from sqlalchemy.exc import InvalidRequestError
 
 
@@ -28,10 +28,10 @@ class Account(db.Model):
         institution = Institution.query.get(json['institution_id'])
 
         if account_category is None:
-            raise ItemNotFound('Specified account category does not exist.')
+            raise NotFoundError(AccountCategory)
 
         if institution is None:
-            raise ItemNotFound('Specified institution does not exist.')
+            raise NotFoundError(Institution)
 
         self.account_category = account_category
         self.institution = institution

@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% set active_page = "overview" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Overview{% endblock %}
 
 {% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modules/overview.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -14,4 +15,6 @@
 {% endblock %}
 
 {% block script %}
+<script src="{{ url_for('static', filename='js/modules/overview.js') }}"></script>
+<script type="text/javascript">$(function () { app.modules.overview.setup(); });</script>
 {% endblock %}
